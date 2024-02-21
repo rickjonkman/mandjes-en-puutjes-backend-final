@@ -43,4 +43,6 @@ public class User {
     public void addAuthority(Authority authority) {
         this.authorities.add(authority);
     }
+
+
 }
