@@ -1,9 +1,6 @@
 package dev.rick.mandjesenpuutjesback20.controllers;
 
-import dev.rick.mandjesenpuutjesback20.dto.user.RegistrationDTO;
-import dev.rick.mandjesenpuutjesback20.dto.user.UserDetailsDTO;
-import dev.rick.mandjesenpuutjesback20.dto.user.UserInputDTO;
-import dev.rick.mandjesenpuutjesback20.dto.user.UserOutputDTO;
+import dev.rick.mandjesenpuutjesback20.dto.user.*;
 import dev.rick.mandjesenpuutjesback20.exceptions.FailedToAddAuthority;
 import dev.rick.mandjesenpuutjesback20.services.UserService;
 import dev.rick.mandjesenpuutjesback20.utils.InputValidator;
@@ -58,10 +55,16 @@ public class UserController {
 
 
     //    PERMITTED FOR AUTHENTICATED USERS
-    @GetMapping("/get-user")
+    @GetMapping("/user/get-user")
     public ResponseEntity<UserOutputDTO> getAuthenticatedUser(Principal principal) {
         UserOutputDTO outputDTO = userService.getAuthenticatedUser(principal);
         return ResponseEntity.ok(outputDTO);
+    }
+
+    @PutMapping("/user/change-preferences")
+    public ResponseEntity<?> changePreferences(Principal principal, @RequestBody PreferencesDTO preferencesDTO) {
+        userService.changePreferences(principal, preferencesDTO);
+        return ResponseEntity.noContent().build();
     }
 
 }

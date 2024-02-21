@@ -9,8 +9,12 @@ import java.util.Optional;
 
 public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long> {
 
-    Optional<ShoppingList> findByNewListAndOwner_Username(boolean newList, String username);
+//    Optional<ShoppingList> findByNewListAndOwner_Username(boolean newList, String username);
+//
+//    @Query("SELECT s FROM ShoppingList s ORDER BY s.id DESC LIMIT 4")
+//    Optional<List<ShoppingList>> findShoppingListsByNewListAndOwner_Username(boolean newList, String username);
 
-    @Query("SELECT s FROM ShoppingList s ORDER BY s.creationDate DESC LIMIT 4")
-    Optional<List<ShoppingList>> findShoppingListsByNewListAndOwner_Username(boolean newList, String username);
+    Optional<ShoppingList> findShoppingListByNewList(boolean isNew);
+
+    List<ShoppingList> findShoppingListsByNewList(boolean isNew);
 }

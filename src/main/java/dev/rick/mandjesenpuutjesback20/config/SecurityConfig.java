@@ -56,8 +56,25 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "api/users/register").permitAll()
-                        .anyRequest().denyAll()
+
+//                        PERMITTED TO ADMIN
+                                .requestMatchers(HttpMethod.GET, "/api/admin/**").hasRole("ADMIN")
+
+//                        PERMITTED TO AUTHENTICATED USER
+                                .requestMatchers(HttpMethod.GET, "/api/users/user/**").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/api/users/user/**").authenticated()
+                                .requestMatchers(HttpMethod.GET, "/api/users/shopping-list/**").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/api/users/shopping-list/**").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/api/users/shopping-list/**").authenticated()
+
+//                        ALL USERS
+                                .requestMatchers(HttpMethod.POST, "/api/recipes/add-new").hasRole("USER")
+
+//                        OPEN TO ALL
+                                .requestMatchers(HttpMethod.POST, "api/users/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "api/auth/authenticate").permitAll()
+
+                                .anyRequest().denyAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

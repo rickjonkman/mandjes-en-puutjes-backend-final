@@ -11,11 +11,19 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "groceries")
-public class Grocery extends Product {
+public class Grocery {
+
+    @Id
+    @GeneratedValue
+    private long id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @ManyToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
+    @JoinColumn(name = "list_id")
     private ShoppingList shoppingList;
 
 

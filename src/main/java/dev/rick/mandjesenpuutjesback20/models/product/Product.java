@@ -15,4 +15,6 @@ public class Product {
 
     @Column(name = "products", nullable = false)
     private String productName;
+
+
 }

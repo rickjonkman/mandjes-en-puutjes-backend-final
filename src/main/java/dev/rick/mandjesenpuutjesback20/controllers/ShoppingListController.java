@@ -2,6 +2,7 @@ package dev.rick.mandjesenpuutjesback20.controllers;
 
 import dev.rick.mandjesenpuutjesback20.dto.shoppingList.GroceryDTO;
 import dev.rick.mandjesenpuutjesback20.dto.shoppingList.ShoppingListDTO;
+import dev.rick.mandjesenpuutjesback20.dto.shoppingList.ShoppingListInputDTO;
 import dev.rick.mandjesenpuutjesback20.services.ShoppingListService;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user/shopping-list")
+@RequestMapping("/api/users/shopping-list")
 public class ShoppingListController {
 
     private final ShoppingListService shoppingListService;
@@ -23,8 +24,8 @@ public class ShoppingListController {
     }
 
     @PostMapping("/add-new")
-    public ResponseEntity<ShoppingListDTO> addNewShoppingList(@RequestBody ShoppingListDTO shoppingListDTO, Principal principal) {
-        ShoppingListDTO dto = shoppingListService.addNewShoppingList(shoppingListDTO, principal);
+    public ResponseEntity<ShoppingListDTO> addNewShoppingList(Principal principal, @RequestBody ShoppingListInputDTO inputDTO) {
+        ShoppingListDTO dto = shoppingListService.addNewShoppingList(principal, inputDTO);
 
         URI uri = URI
                 .create(ServletUriComponentsBuilder
@@ -46,16 +47,10 @@ public class ShoppingListController {
         return ResponseEntity.ok(outputList);
     }
 
-    @PutMapping("/add-grocery")
-    public ResponseEntity<?> addGroceryToCurrentList(Principal principal, @RequestBody GroceryDTO groceryDTO) {
-        String outputMessage = shoppingListService.addGroceryToRecentList(principal, groceryDTO);
-        return ResponseEntity.ok(outputMessage);
-    }
-
-    @PutMapping("/remove-grocery")
-    public ResponseEntity<?> removeGroceryFromCurrentList(Principal principal, @RequestBody GroceryDTO groceryDTO) {
-        String outputMessage = shoppingListService.removeGroceryFromRecentList(principal, groceryDTO);
-        return ResponseEntity.ok(outputMessage);
+    @PutMapping("/{shoppingListId}/add-grocery")
+    public ResponseEntity<?> addGroceryToShoppingList(@PathVariable("shoppingListId") long id, @RequestBody GroceryDTO groceryDTO, Principal principal) {
+        shoppingListService.addGroceryToShoppingList(id, groceryDTO, principal);
+        return ResponseEntity.noContent().build();
     }
 
 }

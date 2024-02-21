@@ -16,13 +16,9 @@ public class UserInputDTO {
     private String username;
 
     @NotNull
-    @Min(6)
-    @Max(40)
     private String password;
 
     @NotNull
-    @Min(2)
-    @Max(24)
     private String firstname;
 
     @NotNull

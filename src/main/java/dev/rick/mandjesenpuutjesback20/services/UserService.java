@@ -2,9 +2,9 @@ package dev.rick.mandjesenpuutjesback20.services;
 
 import dev.rick.mandjesenpuutjesback20.converters.UserConverter;
 import dev.rick.mandjesenpuutjesback20.dto.user.*;
+import dev.rick.mandjesenpuutjesback20.exceptions.NameIsTakenException;
 import dev.rick.mandjesenpuutjesback20.exceptions.NotAuthorized;
 import dev.rick.mandjesenpuutjesback20.exceptions.RecordNotFound;
-import dev.rick.mandjesenpuutjesback20.exceptions.UsernameTaken;
 import dev.rick.mandjesenpuutjesback20.models.user.Authority;
 import dev.rick.mandjesenpuutjesback20.models.user.User;
 import dev.rick.mandjesenpuutjesback20.repositories.UserRepository;
@@ -31,7 +31,7 @@ public class UserService {
 
         User isUsernameTaken = findUserByUsername(newUser.getUsername());
         if (isUsernameTaken != null) {
-            throw new UsernameTaken(newUser.getUsername());
+            throw new NameIsTakenException(newUser.getUsername());
         } else {
             User createdUser = converter.convertInputDTOToUser(newUser, encoder);
             userRepository.save(createdUser);
@@ -62,6 +62,15 @@ public class UserService {
         } else {
             throw new NotAuthorized();
         }
+    }
+
+    public void changePreferences(Principal principal, PreferencesDTO preferencesDTO) {
+        User foundUser = findUserByUsername(principal.getName());
+        foundUser.setShowVegan(preferencesDTO.isShowVegan());
+        foundUser.setShowVegetarian(preferencesDTO.isShowVegetarian());
+        foundUser.setShowFish(preferencesDTO.isShowFish());
+        foundUser.setShowMeat(preferencesDTO.isShowMeat());
+        userRepository.save(foundUser);
     }
 
     public UserAuthDTO getUserAuthById(String username) {

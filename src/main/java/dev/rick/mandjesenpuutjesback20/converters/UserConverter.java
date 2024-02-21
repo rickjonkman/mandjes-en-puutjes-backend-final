@@ -19,7 +19,6 @@ public class UserConverter {
         RegistrationDTO dto = new RegistrationDTO();
         dto.setUsername(createdUser.getUsername());
         dto.setEnabled(createdUser.isEnabled());
-        dto.setUserId(createdUser.getUserId());
         dto.setFirstname(createdUser.getFirstname());
         dto.setShowMeat(createdUser.isShowMeat());
         dto.setShowFish(createdUser.isShowFish());
@@ -44,7 +43,6 @@ public class UserConverter {
     public UserOutputDTO convertUserToOutputDTO(User user) {
         UserOutputDTO dto = new UserOutputDTO();
         dto.setFirstname(user.getFirstname());
-        dto.setUserId(user.getUserId());
         dto.setEnabled(user.isEnabled());
         dto.setUsername(user.getUsername());
         dto.setShowMeat(user.isShowMeat());
