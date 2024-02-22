@@ -56,7 +56,7 @@ public class RecipeImageService {
             throw new RecordNotFound(recipeId);
         } else {
             Recipe foundRecipe = optionalRecipe.get();
-            foundRecipe.setImagePath(fileName);
+            foundRecipe.setImageFileName(fileName);
             recipeRepository.save(foundRecipe);
         }
 

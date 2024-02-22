@@ -31,7 +31,7 @@ public class Recipe {
     private int prepTime;
 
     @Column(name = "image")
-    private String imagePath;
+    private String imageFileName;
 
     @ElementCollection
     @CollectionTable(name = "recipe_tags", joinColumns = @JoinColumn(name = "recipe_id"))

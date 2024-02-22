@@ -50,7 +50,7 @@ public class RecipeConverter {
         dto.setName(recipe.getName());
         dto.setServings(recipe.getServings());
         dto.setPrepTime(recipe.getPrepTime());
-        dto.setImagePath(recipe.getImagePath());
+        dto.setImagePath(recipe.getImageFileName());
 
         dto.setTags(convertToTagDTOList(recipe.getTags()));
         dto.setSupplies(recipe.getSupplies());

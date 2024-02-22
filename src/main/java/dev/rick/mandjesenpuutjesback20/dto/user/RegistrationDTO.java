@@ -1,13 +1,12 @@
 package dev.rick.mandjesenpuutjesback20.dto.user;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@RequiredArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class RegistrationDTO {
 
     private String username;

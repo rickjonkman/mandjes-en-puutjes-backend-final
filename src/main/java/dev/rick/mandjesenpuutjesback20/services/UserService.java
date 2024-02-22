@@ -1,6 +1,5 @@
 package dev.rick.mandjesenpuutjesback20.services;
 
-import dev.rick.mandjesenpuutjesback20.converters.UserConverter;
 import dev.rick.mandjesenpuutjesback20.dto.user.*;
 import dev.rick.mandjesenpuutjesback20.exceptions.NameIsTakenException;
 import dev.rick.mandjesenpuutjesback20.exceptions.NotAuthorized;
@@ -18,12 +17,10 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserConverter converter;
     private final PasswordEncoder encoder;
 
-    public UserService(UserRepository userRepository, UserConverter converter, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
-        this.converter = converter;
         this.encoder = encoder;
     }
 
@@ -33,9 +30,9 @@ public class UserService {
         if (isUsernameTaken != null) {
             throw new NameIsTakenException(newUser.getUsername());
         } else {
-            User createdUser = converter.convertInputDTOToUser(newUser, encoder);
+            User createdUser = convertInputDTOToUser(newUser, encoder);
             userRepository.save(createdUser);
-            return converter.convertToRegistrationDTO(createdUser);
+            return convertToRegistrationDTO(createdUser);
         }
     }
 
@@ -57,7 +54,7 @@ public class UserService {
 
         if (foundUser.getUsername().equals(principal.getName())) {
             UserOutputDTO outputDTO;
-            outputDTO = converter.convertUserToOutputDTO(foundUser);
+            outputDTO = convertUserToOutputDTO(foundUser);
             return outputDTO;
         } else {
             throw new NotAuthorized();
@@ -78,7 +75,7 @@ public class UserService {
         if (foundUser == null) {
             throw new RecordNotFound(username);
         } else {
-            return converter.convertToAuthDTO(foundUser, encoder);
+            return convertToAuthDTO(foundUser, encoder);
         }
     }
 
@@ -86,7 +83,7 @@ public class UserService {
         User foundUser = findUserByUsername(username);
 
         if (foundUser.getUsername().equals(username) && foundUser.isEnabled()) {
-            return converter.convertUserToOutputDTO(foundUser);
+            return convertUserToOutputDTO(foundUser);
         } else {
             throw new RecordNotFound(username);
         }
@@ -95,5 +92,52 @@ public class UserService {
     public User findUserByUsername(String username) {
         Optional<User> optionalUser = userRepository.findById(username);
         return optionalUser.orElse(null);
+    }
+
+    public RegistrationDTO convertToRegistrationDTO(User createdUser) {
+        RegistrationDTO dto = new RegistrationDTO();
+        dto.setUsername(createdUser.getUsername());
+        dto.setEnabled(createdUser.isEnabled());
+        dto.setFirstname(createdUser.getFirstname());
+        dto.setShowMeat(createdUser.isShowMeat());
+        dto.setShowFish(createdUser.isShowFish());
+        dto.setShowVegetarian(createdUser.isShowVegetarian());
+        dto.setShowVegan(createdUser.isShowVegan());
+        return dto;
+    }
+
+    public User convertInputDTOToUser(UserInputDTO newUser, PasswordEncoder encoder) {
+        User createdUser = new User();
+        createdUser.setFirstname(newUser.getUsername());
+        createdUser.setUsername(newUser.getUsername());
+        createdUser.setPassword(encoder.encode(newUser.getPassword()));
+        createdUser.setEnabled(newUser.isEnabled());
+        createdUser.setShowMeat(newUser.isShowMeat());
+        createdUser.setShowFish(newUser.isShowFish());
+        createdUser.setShowVegetarian(newUser.isShowVegetarian());
+        createdUser.setShowVegan(newUser.isShowVegan());
+        return createdUser;
+    }
+
+    public UserOutputDTO convertUserToOutputDTO(User user) {
+        UserOutputDTO dto = new UserOutputDTO();
+        dto.setFirstname(user.getFirstname());
+        dto.setEnabled(user.isEnabled());
+        dto.setUsername(user.getUsername());
+        dto.setShowMeat(user.isShowMeat());
+        dto.setShowFish(user.isShowFish());
+        dto.setShowVegetarian(user.isShowVegetarian());
+        dto.setShowVegan(user.isShowVegan());
+        return dto;
+    }
+
+    public UserAuthDTO convertToAuthDTO(User user, PasswordEncoder encoder) {
+        UserAuthDTO userAuthDTO = new UserAuthDTO();
+
+        userAuthDTO.setUsername(user.getUsername());
+        userAuthDTO.setPassword(encoder.encode(user.getPassword()));
+        userAuthDTO.setAuthoritySet(user.getAuthorities());
+
+        return userAuthDTO;
     }
 }
