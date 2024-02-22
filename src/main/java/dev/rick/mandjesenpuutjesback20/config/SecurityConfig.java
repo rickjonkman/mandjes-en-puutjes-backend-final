@@ -66,6 +66,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/users/shopping-list/**").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/api/users/shopping-list/**").authenticated()
                                 .requestMatchers(HttpMethod.PUT, "/api/users/shopping-list/**").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/api/recipes/auth/**").authenticated()
 
 //                        ALL USERS
                                 .requestMatchers(HttpMethod.POST, "/api/recipes/add-new").hasRole("USER")
@@ -73,6 +74,7 @@ public class SecurityConfig {
 //                        OPEN TO ALL
                                 .requestMatchers(HttpMethod.POST, "api/users/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "api/auth/authenticate").permitAll()
+                                .requestMatchers(HttpMethod.GET, "api/recipes/open/**").permitAll()
 
                                 .anyRequest().denyAll()
                 )

@@ -11,6 +11,6 @@ import java.util.List;
 @Setter
 public class ShoppingListInputDTO {
 
-    private List<GroceryDTO> groceries;
+    private List<String> groceries;
 
 }

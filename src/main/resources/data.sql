@@ -6,3 +6,4 @@ INSERT INTO users (username, password, firstname, enabled, show_vegan, show_vege
 INSERT INTO authorities (username, authority) VALUES
 ('rick@novi.nl', 'ROLE_ADMIN'),
 ('fred@novi.nl', 'ROLE_USER');
+

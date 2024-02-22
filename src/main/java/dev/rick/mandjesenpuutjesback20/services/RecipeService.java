@@ -2,7 +2,9 @@ package dev.rick.mandjesenpuutjesback20.services;
 
 import dev.rick.mandjesenpuutjesback20.converters.RecipeConverter;
 import dev.rick.mandjesenpuutjesback20.dto.recipes.RecipeBasicDTO;
+import dev.rick.mandjesenpuutjesback20.dto.recipes.RecipeOutputDTO;
 import dev.rick.mandjesenpuutjesback20.exceptions.NameIsTakenException;
+import dev.rick.mandjesenpuutjesback20.exceptions.RecordNotFound;
 import dev.rick.mandjesenpuutjesback20.models.recipe.Recipe;
 import dev.rick.mandjesenpuutjesback20.models.user.User;
 import dev.rick.mandjesenpuutjesback20.repositories.RecipeRepository;
@@ -11,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,6 +46,17 @@ public class RecipeService {
         return outputDTO;
 
     }
+
+    public RecipeOutputDTO getRecipeById(long recipeId) {
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
+        if (optionalRecipe.isEmpty()) {
+            throw new RecordNotFound(recipeId);
+        } else {
+            Recipe foundRecipe = optionalRecipe.get();
+            return converter.convertToFullOutput(foundRecipe);
+        }
+    }
+
 
     public boolean isRecipeNameAvailable(String name) {
         Optional<Recipe> optionalRecipe = recipeRepository.findRecipeByName(name);

@@ -1,7 +1,10 @@
 package dev.rick.mandjesenpuutjesback20.converters;
 
 import dev.rick.mandjesenpuutjesback20.dto.recipes.RecipeBasicDTO;
+import dev.rick.mandjesenpuutjesback20.dto.recipes.RecipeInstructionDTO;
+import dev.rick.mandjesenpuutjesback20.dto.recipes.RecipeOutputDTO;
 import dev.rick.mandjesenpuutjesback20.dto.recipes.TagDTO;
+import dev.rick.mandjesenpuutjesback20.models.recipe.Instruction;
 import dev.rick.mandjesenpuutjesback20.models.recipe.Recipe;
 import dev.rick.mandjesenpuutjesback20.models.recipe.Tag;
 import dev.rick.mandjesenpuutjesback20.models.user.User;
@@ -12,6 +15,12 @@ import java.util.List;
 
 @Component
 public class RecipeConverter {
+
+    private final IngredientConverter ingredientConverter;
+
+    public RecipeConverter(IngredientConverter ingredientConverter) {
+        this.ingredientConverter = ingredientConverter;
+    }
 
     public Recipe convertBasicInputToRecipe(RecipeBasicDTO inputDTO, User creator) {
 
@@ -32,6 +41,24 @@ public class RecipeConverter {
         dto.setPrepTime(recipe.getPrepTime());
         dto.setCreator(recipe.getCreatedByUser().getUsername());
         dto.setTags(convertToTagDTOList(recipe.getTags()));
+        return dto;
+    }
+
+    public RecipeOutputDTO convertToFullOutput(Recipe recipe) {
+        RecipeOutputDTO dto = new RecipeOutputDTO();
+        dto.setId(recipe.getId());
+        dto.setName(recipe.getName());
+        dto.setServings(recipe.getServings());
+        dto.setPrepTime(recipe.getPrepTime());
+        dto.setImagePath(recipe.getImagePath());
+
+        dto.setTags(convertToTagDTOList(recipe.getTags()));
+        dto.setSupplies(recipe.getSupplies());
+        dto.setIngredientNames(ingredientConverter.convertIngredientListToDTO(recipe.getIngredientNames()));
+        dto.setMeasuredIngredients(ingredientConverter.convertMeasuredListToDTOList(recipe.getMeasuredIngredients()));
+        dto.setInstructions(convertToInstructionsListDTO(recipe.getInstructions()));
+        dto.setCreatedByUser(recipe.getCreatedByUser().getUsername());
+
         return dto;
     }
 
@@ -65,5 +92,22 @@ public class RecipeConverter {
         TagDTO tagDTO = new TagDTO();
         tagDTO.setTagName(tag.getTagName());
         return tagDTO;
+    }
+
+    public List<RecipeInstructionDTO> convertToInstructionsListDTO(List<Instruction> instructions) {
+        List<RecipeInstructionDTO> instructionDTOS = new ArrayList<>();
+
+        for (Instruction instruction : instructions) {
+            RecipeInstructionDTO dto = convertToInstructionDTO(instruction);
+            instructionDTOS.add(dto);
+        }
+
+        return instructionDTOS;
+    }
+
+    public RecipeInstructionDTO convertToInstructionDTO(Instruction instruction) {
+        return new RecipeInstructionDTO(
+                instruction.getStep(),
+                instruction.getInstruction());
     }
 }

@@ -1,12 +1,10 @@
 package dev.rick.mandjesenpuutjesback20.controllers;
 
 import dev.rick.mandjesenpuutjesback20.dto.recipes.RecipeBasicDTO;
+import dev.rick.mandjesenpuutjesback20.dto.recipes.RecipeOutputDTO;
 import dev.rick.mandjesenpuutjesback20.services.RecipeService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -22,7 +20,7 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
-    @PostMapping("/add-new")
+    @PostMapping("/auth/add-new")
     public ResponseEntity<RecipeBasicDTO> addNewRecipe(Principal principal, @RequestBody RecipeBasicDTO inputDTO) {
         RecipeBasicDTO outputDTO = recipeService.addNewRecipe(principal, inputDTO);
 
@@ -32,5 +30,11 @@ public class RecipeController {
                         .path("/api/recipes/"+outputDTO.getId())
                         .toUriString());
         return ResponseEntity.created(uri).body(outputDTO);
+    }
+
+    @GetMapping("/open/{recipeId}/get")
+    public ResponseEntity<RecipeOutputDTO> getRecipeById(@PathVariable("recipeId") long recipeId) {
+        RecipeOutputDTO outputDTO = recipeService.getRecipeById(recipeId);
+        return ResponseEntity.ok(outputDTO);
     }
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RecipeInstructionsInputDTO {
+public class RecipeInstructionDTO {
 
     private int step;
 
